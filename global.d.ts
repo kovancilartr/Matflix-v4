@@ -8,9 +8,9 @@ declare module "@auth/core/types" {
     username: string;
     email: string;
     avatar: string;
-    role: string;
-    status: string;
-    department: string;
-    class: string;
+    role?: string;
+    status?: string;
+    department?: string;
+    class?: string;
   }
 }
