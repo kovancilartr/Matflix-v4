@@ -1,0 +1,228 @@
+[
+    {
+      "id": "a1b2c3d4e5",
+      "title": "ÖABT Matematik Hazırlık",
+      "description": "Öğretmenlik Alan Bilgisi Testi (ÖABT) Matematik sınavına hazırlanmak için kapsamlı bir rehber.",
+      "category": "Matematik",
+      "instructor": "Prof. Dr. Mehmet Yılmaz",
+      "rating": 4.9,
+      "price": 299.99,
+      "duration": "25 saat",
+      "enrollment": 5000,
+      "courseVideoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "thumbnailUrl": "/images/movie/1.jpg",
+      "topics": [
+        {
+          "id": "f6g7h8i9j0",
+          "title": "Analiz",
+          "description": "Analiz temel kavramları, limit, türev, integral ve seriler.",
+          "lessons": [
+            {
+              "id": "k1l2m3n4o5",
+              "title": "Limit Kavramı",
+              "description": "Limitin tanımı, limit teoremleri ve limit hesaplama teknikleri.",
+              "video_id": "1",
+              "video_url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+              "video_duration": "10:00",
+              "thumbnailUrl": "images/thumbnail/1.jpg",
+              "comments": [
+                {
+                  "id": "p6q7r8s9t0",
+                  "author": "Kullanıcı 4",
+                  "content": "Limit kavramını anlamak için harika bir ders!"
+                },
+                {
+                  "id": "u1v2w3x4y5",
+                  "author": "Kullanıcı 5",
+                  "content": "Limit hesaplama teknikleri çok faydalıydı."
+                },
+                {
+                  "id": "z6a7b8c9d0",
+                  "author": "Kullanıcı 6",
+                  "content": "Limit teoremleri açık ve anlaşılır bir şekilde anlatılmış."
+                }
+              ]
+            },
+            {
+              "id": "e1f2g3h4i5",
+              "title": "Türev Kavramı",
+              "description": "Türev ile ilgili konuları anlatılmış.",
+              "video_id": "2",
+              "video_url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+              "video_duration": "13:00",
+              "thumbnailUrl": "images/thumbnail/3.jpg",
+              "comments": [
+                {
+                  "id": "j6k7l8m9n0",
+                  "author": "Kullanıcı 1",
+                  "content": "Limit kavramını anlamak için harika bir ders!"
+                },
+                {
+                  "id": "o1p2q3r4s5",
+                  "author": "Kullanıcı 2",
+                  "content": "Limit hesaplama teknikleri çok faydalıydı."
+                },
+                {
+                  "id": "t6u7v8w9x0",
+                  "author": "Kullanıcı 3",
+                  "content": "Limit teoremleri açık ve anlaşılır bir şekilde anlatılmış."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "y1z2a3b4c5",
+          "title": "Limitler",
+          "description": "Limitlerin tanımı, limit teoremleri ve limit hesaplama teknikleri.",
+          "lessons": [
+            {
+              "id": "d6e7f8g9h0",
+              "title": "Limit Tanımı",
+              "description": "Limitin tanımı, limit teoremleri ve limit hesaplama teknikleri.",
+              "video_id": "1",
+              "video_url": "https://www.youtube.com/watch?v=...",
+              "video_duration": "10:00",
+              "thumbnailUrl": "images/thumbnail/1.jpg",
+              "comments": [
+                {
+                  "id": "i1j2k3l4m5",
+                  "author": "Kullanıcı 1",
+                  "content": "Limit kavramını anlamak için harika bir ders!"
+                },
+                {
+                  "id": "n6o7p8q9r0",
+                  "author": "Kullanıcı 2",
+                  "content": "Limit hesaplama teknikleri çok faydalıydı."
+                },
+                {
+                  "id": "s1t2u3v4w5",
+                  "author": "Kullanıcı 3",
+                  "content": "Limit teoremleri açık ve anlaşılır bir şekilde anlatılmış."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "x1y2z3a4b5",
+          "title": "Limitler2",
+          "description": "Limitlerin tanımı, limit teoremleri ve limit hesaplama teknikleri.",
+          "lessons": [
+            {
+              "id": "c6d7e8f9g0",
+              "title": "Limit Tanımı",
+              "description": "Limitin tanımı, limit teoremleri ve limit hesaplama teknikleri.",
+              "video_id": "1",
+              "video_url": "https://www.youtube.com/watch?v=...",
+              "video_duration": "10:00",
+              "thumbnailUrl": "images/thumbnail/1.jpg",
+              "comments": [
+                {
+                  "id": "h1i2j3k4l5",
+                  "author": "Kullanıcı 1",
+                  "content": "Limit kavramını anlamak için harika bir ders!"
+                },
+                {
+                  "id": "m6n7o8p9q0",
+                  "author": "Kullanıcı 2",
+                  "content": "Limit hesaplama teknikleri çok faydalıydı."
+                },
+                {
+                  "id": "r1s2t3u4v5",
+                  "author": "Kullanıcı 3",
+                  "content": "Limit teoremleri açık ve anlaşılır bir şekilde anlatılmış."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "w1x2y3z4a5",
+      "title": "KPSS Matematik Hazırlık",
+      "description": "Kamu Personeli Seçme Sınavı (KPSS) Matematik bölümüne hazırlanmak için kapsamlı bir kurs.",
+      "category": "Matematik",
+      "instructor": "Doç. Dr. Ayşe Kaya",
+      "rating": 4.8,
+      "price": 249.99,
+      "duration": "30 saat",
+      "enrollment": 7500,
+      "courseVideoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "thumbnailUrl": "/images/movie/2.jpg",
+      "topics": [
+        {
+          "id": "b6c7d8e9f0",
+          "title": "Temel Matematik",
+          "description": "Sayılar, cebir, geometri ve problem çözme teknikleri.",
+          "lessons": [
+            {
+              "id": "g1h2i3j4k5",
+              "title": "Sayılar",
+              "description": "Tam sayılar, rasyonel sayılar ve gerçel sayılar.",
+              "video_id": "2",
+              "video_url": "https://www.youtube.com/watch?v=...",
+              "video_duration": "15:00",
+              "thumbnailUrl": "images/thumbnail/2.jpg",
+              "comments": [
+                {
+                  "id": "l6m7n8o9p0",
+                  "author": "Kullanıcı 1",
+                  "content": "Sayılar konusunu çok iyi anladım, teşekkürler!"
+                },
+                {
+                  "id": "q1r2s3t4u5",
+                  "author": "Kullanıcı 2",
+                  "content": "Örnekler çok açıklayıcıydı."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "v1w2x3y4z5",
+      "title": "YKS Matematik Hazırlık",
+      "description": "Yükseköğretim Kurumları Sınavı (YKS) Matematik bölümüne hazırlanmak için detaylı bir program.",
+      "category": "Matematik",
+      "instructor": "Dr. Ahmet Demir",
+      "rating": 4.7,
+      "price": 199.99,
+      "duration": "40 saat",
+      "enrollment": 10000,
+      "courseVideoUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "thumbnailUrl": "/images/movie/3.jpg",
+      "topics": [
+        {
+          "id": "a6b7c8d9e0",
+          "title": "Fonksiyonlar",
+          "description": "Fonksiyon kavramı, çeşitleri ve grafikleri.",
+          "lessons": [
+            {
+              "id": "f1g2h3i4j5",
+              "title": "Fonksiyon Tanımı",
+              "description": "Fonksiyonun matematiksel tanımı ve örnekleri.",
+              "video_id": "3",
+              "video_url": "https://www.youtube.com/watch?v=...",
+              "video_duration": "12:00",
+              "thumbnailUrl": "images/thumbnail/3.jpg",
+              "comments": [
+                {
+                  "id": "k6l7m8n9o0",
+                  "author": "Kullanıcı 1",
+                  "content": "Fonksiyon kavramını sonunda anladım!"
+                },
+                {
+                  "id": "p1q2r3s4t5",
+                  "author": "Kullanıcı 2",
+                  "content": "Örnekler çok yardımcı oldu."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]

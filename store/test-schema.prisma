@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(auto()) @map("_id")
+  name      String   
+  surname    String   
+  username  String   @unique
+  email     String   @unique
+  password  String   
+  role      String   @default("user")
+  avatar    String   
+  status    String   
+  department String   
+  year      String   
+  created_at DateTime @default(now())
+  courses   Course[]
+  users User[] @relation(fields: [id], references: [id]) // userId yerine id kullan
+  // Ekleme
+  user User @relation("UserToUsers", fields: [id], references: [id])
+}
+
+model Course {
+  id          Int      @id @default(auto()) @map("_id")
+  title        String   
+  description  String   
+  category     String   
+  instructor   String   
+  rating       Float    
+  price        Float    
+  duration     String   
+  enrollment   Int      
+  subcategories Subcategory[]
+  userId Int @map("user_id")
+}
+
+model Subcategory {
+  id          Int      @id @default(auto()) @map("_id")
+  title        String   
+  description  String   
+  lessons      Lesson[]
+  courseId     Int      @map("course_id")
+  course       Course   @relation(fields: [courseId], references: [id])
+}
+
+model Lesson {
+  id          Int      @id @default(auto()) @map("_id")
+  title        String   
+  description  String   
+  video_id     String   
+  video_url    String   
+  video_duration String   
+  thumbnailUrl String   
+  comments     Comment[]
+  subcategoryId Int      @map("subcategory_id")
+  subcategory  Subcategory @relation(fields: [subcategoryId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(auto()) @map("_id")
+  author     String   
+  content    String   
+  lessonId   Int      @map("lesson_id")
+  lesson     Lesson   @relation(fields: [lessonId], references: [id])
+}
