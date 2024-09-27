@@ -13,7 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const session = useSession();
-  const [user, setUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
     id: "",
     username: "",
@@ -27,38 +26,29 @@ const Profile = () => {
     class: "",
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(true); // Yükleme durumu
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userData = await getUserByEmail(
-        session.data?.user?.email as string
-      );
-      setUser({
-        ...userData,
-        id: userData?.id || "",
-        role: userData?.role || "",
-        status: userData?.status || "",
-        department: userData?.department || "",
-        class: userData?.class || "",
-        surname: userData?.surname || "",
-        name: userData?.name || "",
-        username: userData?.username || "",
-        email: userData?.email || "",
-        avatar: userData?.avatar || "",
-      });
-
-      setFormData({
-        id: userData?.id || "",
-        username: userData?.username || "",
-        email: userData?.email || "",
-        name: userData?.name || "",
-        surname: userData?.surname || "",
-        password: "",
-        role: userData?.role || "",
-        department: userData?.department || "",
-        status: userData?.status || "",
-        class: userData?.class || "",
-      });
+      try {
+        const userData = await getUserByEmail(session.data?.user?.email as string);
+        setFormData({
+          id: userData?.id || "",
+          username: userData?.username || "",
+          email: userData?.email || "",
+          name: userData?.name || "",
+          surname: userData?.surname || "",
+          password: "",
+          role: userData?.role || "",
+          department: userData?.department || "",
+          status: userData?.status || "",
+          class: userData?.class || "",
+        });
+      } catch (error) {
+        toast.error("Kullanıcı verileri yüklenirken bir hata oluştu");
+      } finally {
+        setLoading(false); // Yükleme tamamlandı
+      }
     };
     fetchUser();
   }, [session.data?.user?.email]);
@@ -68,7 +58,6 @@ const Profile = () => {
     if (file) {
       setSelectedFile(file);
     }
-    console.log(file);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,40 +68,31 @@ const Profile = () => {
   const handleSubmit = async () => {
     try {
       if (selectedFile) {
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-        formData.append("id", user?.id as string);
-        formData.append("userId", user?.id as string);
+        const userFormData = new FormData(); // Yeni FormData oluştur
+        userFormData.append("file", selectedFile);
+        userFormData.append("id", formData.id); // Düzeltme
+        userFormData.append("userId", formData.id); // Düzeltme
 
         const response = await fetch("/api/upload", {
           method: "POST",
-          body: formData,
+          body: userFormData, // Değişiklik burada
         });
 
-        if (response.status === 200) {
-          toast.success("Profil fotoğrafı başarıyla yüklendi");
-        } else {
-          toast.error("Profil fotoğrafı yüklenirken bir hata oluştu");
+        if (response.status !== 200) {
+          throw new Error("Profil fotoğrafı yüklenirken bir hata oluştu");
         }
+        toast.success("Profil fotoğrafı başarıyla yüklendi");
       }
 
-      await axios.put(`/api/users/${formData?.id}`, {
-        name: formData.name,
-        surname: formData.surname,
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role,
-        status: formData.status,
-        department: formData.department,
-        class: formData.class,
-      });
+      await axios.put(`/api/users/${formData.id}`, formData);
       toast.success("Kullanıcı başarıyla güncellendi");
     } catch (error) {
       toast.error("Kullanıcı güncellenirken bir hata oluştu");
-      console.log(error);
+      console.error(error);
     }
   };
+
+  if (loading) return <div>Yükleniyor...</div>; // Yükleme durumu
 
   return (
     <div className="w-full h-full flex flex-col items-center p-4">
@@ -121,7 +101,7 @@ const Profile = () => {
         <div className="flex flex-col items-center justify-center space-y-2">
           <div className="w-12 h-12 rounded-full overflow-hidden">
             <img
-              src={user?.avatar || "/images/default-red.png"}
+              src={"/images/default-red.png"}
               alt="profile"
               className="cursor-pointer"
               onClick={() => document.getElementById("fileInput")?.click()}
@@ -133,64 +113,18 @@ const Profile = () => {
               onChange={handleFileChange}
             />
           </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Kullanıcı adı :</Label>
-            <Input
-              name="username"
-              className="w-3/4"
-              value={formData.username}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Email :</Label>
-            <Input
-              name="email"
-              className="w-3/4"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Adı :</Label>
-            <Input
-              name="name"
-              className="w-3/4"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Soyadı :</Label>
-            <Input
-              name="surname"
-              className="w-3/4"
-              value={formData.surname}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Şifre :</Label>
-            <Input
-              name="password"
-              type="password"
-              className="w-3/4"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Rol :</Label>
-            <Input className="w-3/4" value={user?.role} disabled />
-          </div>
-          <div className="w-full flex flex-row items-center">
-            <Label className="w-1/4">Branş :</Label>
-            <Input className="w-3/4" value={user?.department} disabled />
-          </div>
-          <div className="w-full flex flex-row items-center pb-4">
-            <Label className="w-1/4">Durum :</Label>
-            <Input className="w-3/4" value={user?.status} disabled />
-          </div>
+          {Object.keys(formData).map((key) => (
+            <div className="w-full flex flex-row items-center" key={key}>
+              <Label className="w-1/4">{key.charAt(0).toUpperCase() + key.slice(1)} :</Label>
+              <Input
+                name={key}
+                className="w-3/4"
+                value={formData[key as keyof typeof formData]}
+                onChange={handleChange}
+                disabled={key === "role" || key === "department" || key === "status" || key === "class" || key === "id"} // Değiştirilemez alanlar
+              />
+            </div>
+          ))}
           <Button className="w-full" onClick={handleSubmit}>
             Bilgilerimi Güncelle
           </Button>
