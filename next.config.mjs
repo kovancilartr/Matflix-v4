@@ -1,4 +1,11 @@
+// next.config.mjs
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    // ... diğer ayarlar ...
+    server: {
+      // Güvenilir hostları buraya ekleyin
+      trustedHosts: ['localhost'],
+    },
+  };
+  
+  export default nextConfig;

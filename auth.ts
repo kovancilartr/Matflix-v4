@@ -1,3 +1,4 @@
+// matflix-v4/auth.ts
 import NextAuth from "next-auth";
 import Github from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -5,7 +6,6 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
 import { saltAndHashPassword } from "./utils/helper";
-import { UserRole, UserStatus, UserDepartment } from "@prisma/client";
 
 export const {
   handlers,
@@ -67,17 +67,18 @@ export const {
   ],
   callbacks: {
     jwt({ token, user }) {
-      if(user) token.id = (user as any).id
-      if(user) token.surname = (user as any).surname
-      if(user) token.role = (user as any).role
-      if(user) token.status = (user as any).status
-      if(user) token.department = (user as any).department
-      if(user) token.class = (user as any).class
-      return token
+      if (user) token.id = (user as any).id;
+      if (user) token.surname = (user as any).surname;
+      if (user) token.role = (user as any).role;
+      if (user) token.status = (user as any).status;
+      if (user) token.department = (user as any).department;
+      if (user) token.class = (user as any).class;
+      return token;
     },
     session({ session, token }) {
       session.user = token as any;
       return session;
-    }
-  }
+    },
+  },
+  trustHost: true, // localhost'u güvenilir host olarak ayarlamak için
 });
