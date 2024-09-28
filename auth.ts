@@ -76,13 +76,8 @@ export const {
       return token
     },
     session({ session, token }) {
-      session.user.id = (token.id as UserRole)
-      session.user.surname = (token.surname as UserRole)
-      session.user.role = (token.role as UserRole)
-      session.user.status = (token.status as UserStatus)
-      session.user.department = (token.department as UserDepartment)
-      session.user.class = (token.class as string)
-      return session
+      session.user = token as any;
+      return session;
     }
   }
 });
