@@ -36,7 +36,12 @@ export interface SideNavItem {
 export interface TabNavItem {
   name: string;
   url: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
+  active?: boolean;
+}
+export interface NavbarProps {
+  className?: string;
+  items: TabNavItem[];
 }
 export interface AdminDashboardProps {
   children: React.ReactNode;

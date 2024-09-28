@@ -1,32 +1,17 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import NavItem from "./NavItem";
-import AccountMenu from "../(Global)/AccountMenu";
 import { useSession } from "next-auth/react";
-import { Button } from "../ui/button";
 import Link from "next/link";
-
-interface NavItem {
-  name: string;
-  url: string;
-}
-
-interface NavbarProps {
-  className?: string;
-  items: NavItem[];
-}
+import { Button } from "../ui/button";
+import { NavbarProps } from "@/types/types";
+import NavItem from "./NavItem";
+import AccountMenu from "./AccountMenu";
 
 const Navbar: React.FC<NavbarProps> = ({ items, className }) => {
-  const [accountMenuItem, setAccountMenu] = useState(false);
-
   const { data: session, status } = useSession();
 
   useEffect(() => {}, []);
-
-  const toggleAccountMenu = useCallback(() => {
-    setAccountMenu((current) => !current);
-  }, []);
 
   return (
     <nav
@@ -39,16 +24,17 @@ const Navbar: React.FC<NavbarProps> = ({ items, className }) => {
       {/* Nav Items */}
       <div className="lg:flex flex-row hidden gap-7 ml-12">
         {items.map((item, index) => (
-          <NavItem key={index} name={item.name} url={item.url} />
+          <NavItem
+            key={index}
+            name={item.name}
+            url={item.url}
+            icon={item.icon}
+          />
         ))}
       </div>
 
       {/* Right Side */}
       <div className="flex flex-row ml-auto gap-7 items-center text-white">
-        <div className="cursor-pointer">
-          <h1>Matflix</h1>
-        </div>
-
         <div className="flex flex-row relative ml-auto gap-2 items-center">
           {status === "authenticated" ? (
             <AccountMenu />

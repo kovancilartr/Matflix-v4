@@ -1,22 +1,14 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavItem from "./NavItem";
-import AccountMenu from "../(Global)/AccountMenu";
+import AccountMenu from "./AccountMenu";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { NavbarProps } from "@/types/types";
 
-interface NavItem {
-  name: string;
-  url: string;
-}
-
-interface HomeNavbarProps {
-  items: NavItem[];
-}
-
-const HomeNavbar: React.FC<HomeNavbarProps> = ({ items }) => {
+const HomeNavbar: React.FC<NavbarProps> = ({ items, className }) => {
   const [showBack, setShowBack] = useState(false);
   const topOffset = 65;
 
@@ -30,14 +22,12 @@ const HomeNavbar: React.FC<HomeNavbarProps> = ({ items }) => {
         setShowBack(false);
       }
     };
-    console.log("HomeNavbar Session Status Log :" , status);
+    console.log("HomeNavbar Session Status Log :", status);
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-
 
   return (
     <nav className="w-full fixed z-20 border-b-2 border-gray-800">
@@ -56,9 +46,7 @@ const HomeNavbar: React.FC<HomeNavbarProps> = ({ items }) => {
         <div></div>
 
         <div className="flex flex-row ml-auto gap-7 items-center text-white">
-          <div
-            className="flex flex-row relative ml-auto gap-2 items-center"
-          >
+          <div className="flex flex-row relative ml-auto gap-2 items-center">
             {status === "authenticated" ? (
               <AccountMenu />
             ) : (
