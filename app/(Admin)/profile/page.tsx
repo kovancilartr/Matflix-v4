@@ -51,6 +51,7 @@ const Profile = () => {
       }
     };
     fetchUser();
+    console.log(session);
   }, [session.data?.user?.email]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -68,6 +68,7 @@ export const {
   callbacks: {
     jwt({ token, user }) {
       if(user) token.id = (user as any).id
+      if(user) token.surname = (user as any).surname
       if(user) token.role = (user as any).role
       if(user) token.status = (user as any).status
       if(user) token.department = (user as any).department
@@ -76,8 +77,12 @@ export const {
     },
     session({ session, token }) {
       session.user.id = (token.id as UserRole)
+      session.user.surname = (token.surname as UserRole)
+      session.user.role = (token.role as UserRole)
+      session.user.status = (token.status as UserStatus)
+      session.user.department = (token.department as UserDepartment)
+      session.user.class = (token.class as string)
       return session
     }
   }
-
 });

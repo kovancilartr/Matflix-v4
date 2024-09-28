@@ -1,5 +1,5 @@
 import React from "react";
-import { AdminDashboard } from "@/components/AdminDashboard";
+import { AdminDashboard } from "@/components/(Global)/GlobalDashboard";
 import { Home, Package, Users2 } from "lucide-react";
 
 export default function AdminLayout({
@@ -14,9 +14,10 @@ export default function AdminLayout({
     { name: "Kullanıcılar", url: "/admin/users", icon: <Users2 className="h-5 w-5" /> },
   ];
 
+
   return (
     <div className="w-full h-screen flex flex-col">
-      <AdminDashboard children={children} sidebarMenuItems={navItems}/>
+      <AdminDashboard children={children} sidebarMenuItems={navItems} />
     </div>
   );
 }

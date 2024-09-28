@@ -1,5 +1,5 @@
-import LoginForm from "@/components/LoginForm";
-import LoginGithub from "@/components/LoginGithub";
+import LoginForm from "@/components/(Global)/(Auth)/LoginForm";
+import LoginGithub from "@/components/(Global)/(Auth)/LoginGithub";
 import Link from "next/link";
 import React from "react";
 
@@ -12,6 +12,7 @@ const SignIn = () => {
             Giriş Yap
           </h1>
           <LoginForm />
+          {/* <LoginGithub /> */}
         </div>
         <div className="w-full flex justify-center mt-4 pb-0 mb-0">
           <Link href="/" className="text-sm text-gray-400">

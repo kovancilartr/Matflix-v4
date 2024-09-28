@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import NavItem from "./NavItem";
-import AccountMenu from "./AccountMenu";
+import AccountMenu from "../(Global)/AccountMenu";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -18,11 +18,9 @@ interface HomeNavbarProps {
 
 const HomeNavbar: React.FC<HomeNavbarProps> = ({ items }) => {
   const [showBack, setShowBack] = useState(false);
-  const [accountMenuItem, setAccountMenu] = useState(false);
   const topOffset = 65;
 
-
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,15 +30,14 @@ const HomeNavbar: React.FC<HomeNavbarProps> = ({ items }) => {
         setShowBack(false);
       }
     };
+    console.log("HomeNavbar Session Status Log :" , status);
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  const toggleAccountMenu = useCallback(() => {
-    setAccountMenu((current) => !current);
-  }, []);
+
 
   return (
     <nav className="w-full fixed z-20 border-b-2 border-gray-800">
@@ -59,21 +56,11 @@ const HomeNavbar: React.FC<HomeNavbarProps> = ({ items }) => {
         <div></div>
 
         <div className="flex flex-row ml-auto gap-7 items-center text-white">
-          <div className="cursor-pointer">
-            <h1>Matflix</h1>
-          </div>
-          <div className="cursor-pointer">
-            <h1>Bize Ulaşın</h1>
-          </div>
           <div
-            onClick={toggleAccountMenu}
             className="flex flex-row relative ml-auto gap-2 items-center"
           >
             {status === "authenticated" ? (
-              <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-lg overflow-hidden">
-                <img src="/images/default-red.png" alt="profile" className="cursor-pointer" />
-                <AccountMenu visible={accountMenuItem} />
-              </div>
+              <AccountMenu />
             ) : (
               <Button className="bg-red-900 hover:bg-red-700">
                 <Link href="/sign-in">Giriş Yap</Link>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import EditUserModel from "./EditUserModel";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -17,50 +17,30 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
 import { Button } from "../ui/button";
-import EditUserModel from "./EditUserModel";
-import localUsers from "@/store/users.json";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { toast } from "react-toastify";
-
-interface User {
-  id: number;
-  email: string;
-  role: string;
-  name: string;
-  surname: string;
-  username: string;
-  avatar: string;
-  status: string;
-  department: string;
-  class: string;
-  created_at: string;
-}
+import { User } from "@/types/types";
 
 const UsersTable = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [selectedUserConfirmDelete, setSelectedUserConfirmDelete] =
-    useState(false);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteOpenModel, setIsDeleteOpenModel] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Arama terimi için state
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 12; // Sayfa başına gösterilecek kullanıcı sayısı
+  const usersPerPage = 12;
 
-  // const xLocalUsers = localUsers; // API'ye istek atmadan önce localUsers kullanılıyorum Test Amaçlı
 
   const fetchUsers = async () => {
     try {
@@ -80,6 +60,7 @@ const UsersTable = () => {
     return <div>Error: {error}</div>;
   }
 
+  {/* Kullanıcı Düzenleme ve Silme İşlemleri */}
   const handleEdit = (user: User) => {
     setSelectedUser(user);
     setIsOpen(true);
@@ -98,7 +79,9 @@ const UsersTable = () => {
       toast.error("Kullanıcı silinirken bir hata oluştu");
     }
   };
+  {/* Kullanıcı Düzenleme ve Silme İşlemleri */}
 
+  {/* Kullanıcı Listeleme */}
   const filteredUsers = users.filter((user) => {
     return (
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -107,15 +90,19 @@ const UsersTable = () => {
       user.username.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
+  {/* Kullanıcı Listeleme */}
 
+  {/* Sayfa Sayısı */}
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const paginatedUsers = filteredUsers.slice(
     (currentPage - 1) * usersPerPage,
     currentPage * usersPerPage
   );
+  {/* Sayfa Sayısı */}
 
   return (
     <div>
+      {/* Arama İşlemleri */}
       <div className="mb-4">
         <input
           type="text"
@@ -125,6 +112,9 @@ const UsersTable = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
+      {/* Arama İşlemleri */}
+
+      {/* Kullanıcı Tablosu */}
       {paginatedUsers.length === 0 ? (
         <p>Üzgünüz, aradığınız kayıt bulunamadı.</p>
       ) : (
@@ -220,6 +210,8 @@ const UsersTable = () => {
                     }}>
                       Sil
                     </Button>
+                    {/* Kullanıcı Silme Uyarısı */}
+                    
                     <AlertDialog
                       open={isDeleteOpenModel}
                       onOpenChange={setIsDeleteOpenModel}
@@ -306,6 +298,7 @@ const UsersTable = () => {
           </Pagination>
         </div>
       )}
+      {/* Kullanıcı Tablosu */}
     </div>
   );
 };

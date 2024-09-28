@@ -1,4 +1,9 @@
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import Image from "next/image";
+import { LogOutIcon, Settings, UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,12 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
-import Link from "next/link";
 import { logout } from "@/actions/auth";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { LogOutIcon, Settings, UserIcon } from "lucide-react";
+import { SessionData } from "@/types/types";
+
 
 const AccountMenu = () => {
   const router = useRouter();
@@ -23,16 +25,17 @@ const AccountMenu = () => {
     window.location.reload();
   };
 
-  const { data: session } = useSession();
+  const { data: session } = useSession() as { data: SessionData | null };
 
   useEffect(() => {
     if (session) {
-      
+      console.log("AccountMenu Session Log :" , session);
     }
   }, [session]);
 
   return (
     <DropdownMenu>
+      {/* Dropdown Trigger */}
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
@@ -48,14 +51,19 @@ const AccountMenu = () => {
           />
         </Button>
       </DropdownMenuTrigger>
+      {/* Dropdown Trigger */}
+
+      {/* Dropdown Content */}
       <DropdownMenuContent className="bg-slate-950 text-white p-2" align="end">
         <div className="flex flex-col items-center cursor-default">
           <div className="flex flex-row gap-x-1">
             <span>{session?.user?.name}</span>
             <span>{session?.user?.surname}</span>
           </div>
-          <DropdownMenuLabel>{session?.user?.email}</DropdownMenuLabel>
-          <div className="flex flex-row gap-x-2">
+          <DropdownMenuLabel>
+            {session?.user?.email}
+          </DropdownMenuLabel>
+          <div className="flex flex-row gap-x-2 py-2">
             <DropdownMenuLabel
               className={`font-bold border-2 border-gray-200 rounded-xl ${
                 session?.user?.role === "admin"
@@ -101,6 +109,7 @@ const AccountMenu = () => {
           Çıkış Yap
         </DropdownMenuItem>
       </DropdownMenuContent>
+      {/* Dropdown Content */}
     </DropdownMenu>
   );
 };

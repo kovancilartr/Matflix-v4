@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Button } from "@/components/ui/button";
-import UsersTable from "@/components/(App)/UsersTable";
-import AddUserModal from "@/components/(App)/AddUserModal";
+import UsersTable from "@/components/(Admin)/UsersTable";
+import AddUserModal from "@/components/(Admin)/AddUserModal";
 
 const AdminUsersPage = () => {
   const [open, setOpen] = useState(false);

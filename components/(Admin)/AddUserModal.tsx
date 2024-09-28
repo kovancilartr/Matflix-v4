@@ -1,5 +1,8 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -11,12 +14,9 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "../ui/input";
 import {
   Select,
@@ -26,10 +26,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { AddUserModalProps } from "@/types/types";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Adınızı girmelisiniz." }),
@@ -38,7 +35,7 @@ const formSchema = z.object({
   email: z.string().email({ message: "Bu bir email adresi olmalıdır." }),
   password: z.string().min(2, { message: "Şifre alanı zorunludur." }),
   role: z.enum(["admin", "user", ""]),
-  status: z.enum(["active", "passive", "pending", ""]),
+  status: z.enum(["active", "passive", "pending"]),
   department: z.enum(["oabt_lm", "oabt_im", "yks_tyt", "yks_ayt", ""]),
   class: z.enum([
     "2024_1",
@@ -51,119 +48,60 @@ const formSchema = z.object({
   ]),
 });
 
-interface EditUserModelProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  selectedUser?: User | null;
-  editOnSuccess: () => void;
-}
-interface User {
-  id: number;
-  name: string;
-  surname: string;
-  username: string;
-  email: string;
-  role: string;
-  avatar: string;
-  status: string;
-  department: string;
-  class: string;
-  created_at: string;
-}
-
-const EditUserModel: React.FC<EditUserModelProps> = ({
-  isOpen,
-  setIsOpen,
-  selectedUser,
-  editOnSuccess,
-}) => {
+const AddUserModal = ({ onSuccess, openModel, setOpen }: AddUserModalProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: selectedUser?.name,
-      surname: selectedUser?.surname,
-      username: selectedUser?.username,
-      email: selectedUser?.email,
+      name: "",
+      surname: "",
+      username: "",
+      email: "",
       password: "",
-      role: selectedUser?.role as "admin" | "user" | "",
-      status: selectedUser?.status as "active" | "passive" | "pending" | "",
-      department: selectedUser?.department as
-        | ""
-        | "oabt_lm"
-        | "oabt_im"
-        | "yks_tyt"
-        | "yks_ayt"
-        | "",
-      class: selectedUser?.class as
-        | ""
-        | "2024_1"
-        | "2024_2"
-        | "2024_3"
-        | "2025_1"
-        | "2025_2"
-        | "2025_3"
-        | "",
+      role: "",
+      status: "pending",
+      department: "",
+      class: "",
     },
   });
-  useEffect(() => {
-    if (isOpen) {
-      form.reset({
-        name: selectedUser?.name || "",
-        surname: selectedUser?.surname || "",
-        username: selectedUser?.username || "",
-        email: selectedUser?.email || "",
-        password: "",
-        role: selectedUser?.role as "admin" | "user" | "",
-        status: selectedUser?.status as "active" | "passive" | "pending" | "",
-        department: selectedUser?.department as
-          | ""
-          | "oabt_lm"
-          | "oabt_im"
-          | "yks_tyt"
-          | "yks_ayt"
-          | "",
-        class: selectedUser?.class as
-          | ""
-          | "2024_1"
-          | "2024_2"
-          | "2024_3"
-          | "2025_1"
-          | "2025_2"
-          | "2025_3"
-          | "",
-      });
-    } else {
-      form.reset();
-    }
-  }, [isOpen, selectedUser]); // form'u dependency list'inden çıkardım
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.put(`/api/users/${selectedUser?.id}`, {
-        name: values.name,
-        surname: values.surname,
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        role: values.role,
-        status: values.status,
-        department: values.department,
-        class: values.class,
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
       });
-      toast.success("Kullanıcı başarıyla güncellendi");
-      setIsOpen(false);
-      editOnSuccess();
+
+      if (!response.ok) {
+        throw new Error("Kullanıcı kaydedilemedi");
+      }
+
+      const data = await response.json();
+
+      if (onSuccess) {
+        onSuccess(data, null);
+      }
+
+      setOpen(false);
     } catch (error) {
-      console.log(error);
+      if (onSuccess) {
+        onSuccess(null, error);
+      }
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={openModel} onOpenChange={setOpen}>
       <DialogContent>
-        <DialogHeader>
+        {/* Dialog Header */}
+        <DialogHeader className="flex items-center justify-center">
           <DialogTitle>Yeni Kullanıcı Ekle</DialogTitle>
         </DialogHeader>
+        {/* Dialog Header */}
+
+        {/* Form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Name Surname */}
@@ -174,8 +112,11 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 render={({ field }) => (
                   <FormItem className="w-1/2">
                     <div className="flex flex-row justify-between items-center">
-                      <FormLabel>Adınız</FormLabel>
-                      <FormMessage className="text-xs" />
+                      {form.formState.errors.name ? (
+                        <FormMessage className="text-xs" />
+                      ) : (
+                        <FormLabel>Adınız</FormLabel>
+                      )}
                     </div>
                     <FormControl>
                       <Input
@@ -194,8 +135,11 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 render={({ field }) => (
                   <FormItem className="w-1/2">
                     <div className="flex flex-row justify-between items-center">
-                      <FormLabel>Soyadınız</FormLabel>
-                      <FormMessage className="text-xs" />
+                      {form.formState.errors.surname ? (
+                        <FormMessage className="text-xs" />
+                      ) : (
+                        <FormLabel>Soyadınız</FormLabel>
+                      )}
                     </div>
                     <FormControl>
                       <Input
@@ -209,6 +153,7 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 )}
               />
             </div>
+
             {/* Username Email */}
             <div className="flex flex-row gap-x-6">
               <FormField
@@ -217,8 +162,11 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 render={({ field }) => (
                   <FormItem className="w-1/2">
                     <div className="flex flex-row justify-between items-center">
-                      <FormLabel>Kullanıcı Adı</FormLabel>
-                      <FormMessage className="text-xs" />
+                      {form.formState.errors.username ? (
+                        <FormMessage className="text-xs" />
+                      ) : (
+                        <FormLabel>Kullanıcı Adı</FormLabel>
+                      )}
                     </div>
                     <FormControl>
                       <Input
@@ -235,8 +183,11 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 render={({ field }) => (
                   <FormItem className="w-1/2">
                     <div className="flex flex-row justify-between items-center">
-                      <FormLabel>Email</FormLabel>
-                      <FormMessage className="text-xs" />
+                      {form.formState.errors.email ? (
+                        <FormMessage className="text-xs" />
+                      ) : (
+                        <FormLabel>Email</FormLabel>
+                      )}
                     </div>
                     <FormControl>
                       <Input
@@ -248,6 +199,7 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 )}
               />
             </div>
+
             {/* Password */}
             <FormField
               control={form.control}
@@ -255,8 +207,11 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <div className="flex flex-row justify-between items-center">
-                    <FormLabel>Şifreniz</FormLabel>
-                    <FormMessage className="text-xs" />
+                    {form.formState.errors.password ? (
+                      <FormMessage className="text-xs" />
+                    ) : (
+                      <FormLabel>Şifreniz</FormLabel>
+                    )}
                   </div>
                   <FormControl>
                     <Input
@@ -268,6 +223,7 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 </FormItem>
               )}
             />
+
             {/* Role Status */}
             <div className="flex flex-row gap-x-6">
               <FormField
@@ -326,6 +282,7 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 )}
               />
             </div>
+
             {/* Department Class */}
             <div className="flex flex-row gap-x-6">
               <FormField
@@ -391,15 +348,17 @@ const EditUserModel: React.FC<EditUserModelProps> = ({
                 )}
               />
             </div>
+
             {/* Submit */}
             <Button className="w-full" type="submit">
               Kullanıcıyı Kaydet
             </Button>
           </form>
         </Form>
+        {/* Form */}
       </DialogContent>
     </Dialog>
   );
 };
 
-export default EditUserModel;
+export default AddUserModal;

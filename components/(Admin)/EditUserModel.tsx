@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -13,7 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 import { Input } from "../ui/input";
 import {
   Select,
@@ -23,10 +26,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { fetchUsers } from "@/actions/data";
+import { toast } from "react-toastify";
+import { EditUserModelProps } from "@/types/types";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Adınızı girmelisiniz." }),
@@ -35,7 +36,7 @@ const formSchema = z.object({
   email: z.string().email({ message: "Bu bir email adresi olmalıdır." }),
   password: z.string().min(2, { message: "Şifre alanı zorunludur." }),
   role: z.enum(["admin", "user", ""]),
-  status: z.enum(["active", "passive", "pending"]),
+  status: z.enum(["active", "passive", "pending", ""]),
   department: z.enum(["oabt_lm", "oabt_im", "yks_tyt", "yks_ayt", ""]),
   class: z.enum([
     "2024_1",
@@ -48,58 +49,99 @@ const formSchema = z.object({
   ]),
 });
 
-interface AddUserModalProps {
-  onSuccess?: (data: any, error: any) => void;
-  setOpen: (open: boolean) => void;
-  openModel: boolean;
-}
 
-const AddUserModal = ({ onSuccess, openModel, setOpen }: AddUserModalProps) => {
+
+
+const EditUserModel: React.FC<EditUserModelProps> = ({
+  isOpen,
+  setIsOpen,
+  selectedUser,
+  editOnSuccess,
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      surname: "",
-      username: "",
-      email: "",
+      name: selectedUser?.name,
+      surname: selectedUser?.surname,
+      username: selectedUser?.username,
+      email: selectedUser?.email,
       password: "",
-      role: "",
-      status: "pending",
-      department: "",
-      class: "",
+      role: selectedUser?.role as "admin" | "user" | "",
+      status: selectedUser?.status as "active" | "passive" | "pending" | "",
+      department: selectedUser?.department as
+        | ""
+        | "oabt_lm"
+        | "oabt_im"
+        | "yks_tyt"
+        | "yks_ayt"
+        | "",
+      class: selectedUser?.class as
+        | ""
+        | "2024_1"
+        | "2024_2"
+        | "2024_3"
+        | "2025_1"
+        | "2025_2"
+        | "2025_3"
+        | "",
     },
   });
 
+  useEffect(() => {
+    if (isOpen) {
+      form.reset({
+        name: selectedUser?.name || "",
+        surname: selectedUser?.surname || "",
+        username: selectedUser?.username || "",
+        email: selectedUser?.email || "",
+        password: "",
+        role: selectedUser?.role as "admin" | "user" | "",
+        status: selectedUser?.status as "active" | "passive" | "pending" | "",
+        department: selectedUser?.department as
+          | ""
+          | "oabt_lm"
+          | "oabt_im"
+          | "yks_tyt"
+          | "yks_ayt"
+          | "",
+        class: selectedUser?.class as
+          | ""
+          | "2024_1"
+          | "2024_2"
+          | "2024_3"
+          | "2025_1"
+          | "2025_2"
+          | "2025_3"
+          | "",
+      });
+    } else {
+      form.reset();
+    }
+  }, [isOpen, selectedUser]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
+      await axios.put(`/api/users/${selectedUser?.id}`, {
+        name: values.name,
+        surname: values.surname,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+        status: values.status,
+        department: values.department,
+        class: values.class,
       });
-
-      if (!response.ok) {
-        throw new Error('Kullanıcı kaydedilemedi');
-      }
-
-      const data = await response.json();
-
-      if (onSuccess) {
-        onSuccess(data, null);
-      }
-
-      setOpen(false);
+      toast.success("Kullanıcı başarıyla güncellendi");
+      setIsOpen(false);
+      editOnSuccess();
     } catch (error) {
-      if (onSuccess) {
-        onSuccess(null, error);
-      }
+      console.log(error);
     }
   };
 
   return (
-    <Dialog open={openModel} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Yeni Kullanıcı Ekle</DialogTitle>
@@ -342,4 +384,4 @@ const AddUserModal = ({ onSuccess, openModel, setOpen }: AddUserModalProps) => {
   );
 };
 
-export default AddUserModal;
+export default EditUserModel;

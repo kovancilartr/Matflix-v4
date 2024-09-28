@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import NavItem from "./NavItem";
-import AccountMenu from "./AccountMenu";
+import AccountMenu from "../(Global)/AccountMenu";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import Link from "next/link";
